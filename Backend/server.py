@@ -7,6 +7,9 @@ import json
 from torch.cuda import is_available 
 from llmops import llmInteractions
 load_dotenv()
+device="cuda:0" if is_available() else "cpu"
+
+llm=-1
 app = FastAPI()
 origins = [
     '*',
@@ -19,9 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-device="cuda:0" if is_available() else "cpu"
 
-llm="hehe"
 @app.post("/ingest")
 async def ingestion(request:Request):
     data= await request.json()
@@ -41,36 +42,52 @@ async def ingestion(request:Request):
 @app.post("/infer")
 async def inference(request:Request):
     data= await request.json()
-    data=request.body()
-    # print(request)
-    # print((data))
-    response="hehe"
     response= await llm.inference(data['query'])
-    response=data
     return response
-
-
 
 
 # Below paths are for debugging purposes 
 @app.post("/changeDatabaseHost")
-async def inference(request:Request):
+async def hhost(request:Request):
     data= await request.json()
     os.environ["MilvusHost"]=data['name']
-    response=f"<host>:<port> = {os.getenv('MilvusHost')}:{os.getenv('MilvusPort')}"
-    llm=llmInteractions()
+    global llm
+    try:
+        llm=llmInteractions()
+        response=f"<host>:<port> = {os.getenv('MilvusHost')}:{os.getenv('MilvusPort')}"
+    except Exception as e:
+        response=e
     return response
 @app.post("/changeDatabasePort")
-async def inference(request:Request):
+async def pport(request:Request):
     data= await request.json()
     os.environ["MilvusPort"]=data['name']
-    llm=llmInteractions()
-    response=f"<host>:<port> = {os.getenv('MilvusHost')}:{os.getenv('MilvusPort')}"
+    global llm
+    try:
+        llm=llmInteractions()
+        response=f"<host>:<port> = {os.getenv('MilvusHost')}:{os.getenv('MilvusPort')}"
+
+    except Exception as e:
+        response=e
   
     return response
-
-if __name__ == "__main__":
+@app.post("/changeGeminiKey")
+async def pport(request:Request):
+    data= await request.json()
+    os.environ["GOOGLE_API_KE"]=data['name']
+    global llm
     try:
+        llm=llmInteractions()
+        response=os.environ["GOOGLE_API_KE"]
+    except Exception as e:
+        # print(e)
+        response=e
+  
+    return response
+if __name__ == "__main__":
+
+    try:
+        
         llm=llmInteractions()
     except:
         pass

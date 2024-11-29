@@ -9,7 +9,7 @@ const Routing = () => {
     
     <div className='Routing-nav'>
   <button  className="App-button" onClick={() => navigate('/upload_products')}>Upload Product Here</button>
-  <button  className="App-button" onClick={() => navigate('/upload_products')}>Chat Here</button>
+  <button  className="App-button" onClick={() => navigate('/chat')}>Chat Here</button>
 </div>
   )
 }

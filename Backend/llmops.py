@@ -1,10 +1,9 @@
-
+from llms.geminiAPI import InferGemini
 from llms.Embedder import Sentence_Embedder
 from Database.operations import Database
-from llms.geminiAPI import InferGemini
+
 import json
 import os
-
 userInformation="User Information:{name:Mahesh, Occupation: Engineering Student,gender:Male}"
 PurchaseHistory="Purchase History:Previously purchased Items include protien powder, Iphone 15 pro, Peanut butter, beardo's Face Serum, sunscreen, Hard Disk."
 conversationHistory=[]
@@ -44,7 +43,7 @@ class llmInteractions:
         conversationHistory.append({query:finalResponse['response']})
         
         if(len(conversationHistory)>5):
-            conversationHistory.remove(0)
+            conversationHistory.remove(conversationHistory[0])
         response={"response":finalResponse['response']}
         response["products"]=[]
         if(finalResponse['rag_required']):
@@ -54,15 +53,17 @@ class llmInteractions:
             print(search_text)
             topk=self.database.search(search_vector)
             products=[]
+            ids_={""}
             for i in topk[0]:
-                print(i)
+                
                 data=(self.database.client.get(collection_name=self.database.collectionName,ids=[i.id]))[0]
-
+                if(data["link"] in ids_):continue
+                else : ids_.add(data["link"])
                 del data['embedding']
-                products.append(data)
+                if(data not in products):products.append(data)
+            
             response["products"]=products
             previouslyViewedProducts={"Previously Viewed Products":products}
-        print(response)
         return response
 
 

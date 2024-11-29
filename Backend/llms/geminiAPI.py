@@ -1,14 +1,16 @@
 import google.generativeai as genai
 import os
 import json 
-genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+
 
 
 
 class InferGemini:
     def __init__(self) -> None:
         self.model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-
+        genai.configure(api_key=os.getenv("GOOGLE_API_KE"))
+        ke=os.getenv("GOOGLE_API_KE")
+        print(f"Gemini Key: {ke}")
     def getlist(self,s):
         x=0
         y=-1
@@ -42,7 +44,7 @@ class InferGemini:
         instructions='''
                     System: This is a conversation between user and an AI product seller. You are acting as a AI product seller. 
                             You are given conversation history, user Details and Purchase History. Do not to refer to any external 
-                            knowledge base and respond as fast as possible. You will have access to product knowledge base.
+                            knowledge base and respond as fast as possible. This system already refers to external database.
 
                     Output Format:
                             JSON
@@ -57,7 +59,7 @@ class InferGemini:
                         search_phrase: If RAG is required, generate a search phrase to be used for searching. keep this phrase informative about the 
                         product and do not use any unnecessary words, include all necessary words and keep length of sentence short. But of length atleast 4 words
                         Response Generation: Generate a direct response based on the provided context, query if rag is required then assume 
-                        that you are already showing a few products that we will get from RAG call. If additional information is required mention it in 
+                        that you are already showing a few products that we will get from RAG call. If additional information is required from user mention it in 
                         this response.
                     '''
         

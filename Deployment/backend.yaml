@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: backend-container
-        image: maheshmg11/backend:v1.1  # Replace with your actual image
+        image: maheshmg11/backend:latest  # Replace with your actual image
         ports:
         - containerPort: 8002  # Port on which your backend app listens
         env:
